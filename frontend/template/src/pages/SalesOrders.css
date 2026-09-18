@@ -1,0 +1,129 @@
+.sales-orders-page {
+    min-height: 100vh;
+    background: #f4f6f8;
+    padding: 30px;
+  }
+  
+  .sales-orders-container {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  
+  .sales-orders-header {
+    margin-bottom: 25px;
+  }
+  
+  .sales-orders-header h1 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 28px;
+  }
+  
+  .sales-orders-header p {
+    margin-top: 7px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .sales-orders-table-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow-x: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  }
+  
+  .sales-orders-table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+  }
+  
+  .sales-orders-table th,
+  .sales-orders-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .sales-orders-table th {
+    background: #f9fafb;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .sales-orders-table td {
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .sales-orders-table tbody tr:hover {
+    background: #f9fafb;
+  }
+  
+  .sales-order-number {
+    color: #2563eb !important;
+    font-weight: 600;
+  }
+  
+  .sales-order-total {
+    font-weight: 700;
+    color: #111827 !important;
+  }
+  
+  .sales-order-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .status-pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-confirmed {
+    background: #dcfce7;
+    color: #166534;
+  }
+  
+  .status-dispatched {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  .confirm-button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .confirm-button:hover {
+    background: #1d4ed8;
+  }
+  
+  .empty-sales-orders {
+    background: #ffffff;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    color: #6b7280;
+  }
+  
+  @media (max-width: 700px) {
+    .sales-orders-page {
+      padding: 15px;
+    }
+  }

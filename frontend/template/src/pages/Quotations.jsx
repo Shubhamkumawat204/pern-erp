@@ -144,6 +144,44 @@ function Quotations() {
     }
   };
 
+  const updateQuotationStatus = async (quotationId, status) => {
+    try {
+      const response = await api.patch(`/quotations/${quotationId}/status`, {
+        status,
+      });
+
+      alert(response.data.message);
+
+      // Refresh quotations
+      fetchQuotations();
+    } catch (error) {
+      console.error("Update quotation status error:", error);
+
+      alert(
+        error.response?.data?.message || "Failed to update quotation status"
+      );
+    }
+  };
+
+  const convertToSalesOrder = async (quotationId) => {
+    try {
+      const response = await api.post(
+        `/sales-orders/quotations/${quotationId}/convert`
+      );
+
+      alert(response.data.message);
+
+      // Refresh quotation list
+      fetchQuotations();
+    } catch (error) {
+      console.error("Convert quotation to sales order error:", error);
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to convert quotation to sales order"
+      );
+    }
+  };
   const removeProduct = (index) => {
     if (selectedProducts.length === 1) {
       return;
@@ -440,6 +478,7 @@ function Quotations() {
                   <th>GST</th>
                   <th>Grand Total</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
@@ -476,6 +515,54 @@ function Quotations() {
                       >
                         {quotation.status}
                       </span>
+                    </td>
+
+                    <td>
+                      {quotation.status === "DRAFT" && (
+                        <button
+                          className="quotation-action-button send-button"
+                          onClick={() =>
+                            updateQuotationStatus(quotation.id, "SENT")
+                          }
+                        >
+                          Send
+                        </button>
+                      )}
+
+                      {quotation.status === "SENT" && (
+                        <>
+                          <button
+                            className="quotation-action-button accept-button"
+                            onClick={() =>
+                              updateQuotationStatus(quotation.id, "ACCEPTED")
+                            }
+                          >
+                            Accept
+                          </button>
+
+                          <button
+                            className="quotation-action-button reject-button"
+                            onClick={() =>
+                              updateQuotationStatus(quotation.id, "REJECTED")
+                            }
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+
+                      {quotation.status === "ACCEPTED" && (
+                        <button
+                          className="quotation-action-button convert-button"
+                          onClick={() => convertToSalesOrder(quotation.id)}
+                        >
+                          Convert to Sales Order
+                        </button>
+                      )}
+
+                      {quotation.status === "REJECTED" && (
+                        <span className="action-completed">Closed</span>
+                      )}
                     </td>
                   </tr>
                 ))}

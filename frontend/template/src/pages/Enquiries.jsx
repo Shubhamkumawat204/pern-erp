@@ -35,10 +35,7 @@ function Enquiries() {
     } catch (error) {
       console.error("Fetch enquiries error:", error);
 
-      alert(
-        error.response?.data?.message ||
-          "Failed to fetch enquiries"
-      );
+      alert(error.response?.data?.message || "Failed to fetch enquiries");
     } finally {
       setLoading(false);
     }
@@ -53,10 +50,7 @@ function Enquiries() {
     } catch (error) {
       console.error("Fetch products error:", error);
 
-      alert(
-        error.response?.data?.message ||
-          "Failed to fetch products"
-      );
+      alert(error.response?.data?.message || "Failed to fetch products");
     }
   };
 
@@ -121,10 +115,7 @@ function Enquiries() {
         })),
       };
 
-      const response = await api.post(
-        "/enquiries",
-        payload
-      );
+      const response = await api.post("/enquiries", payload);
 
       alert(response.data.message);
 
@@ -151,10 +142,7 @@ function Enquiries() {
     } catch (error) {
       console.error("Create enquiry error:", error);
 
-      alert(
-        error.response?.data?.message ||
-          "Failed to create enquiry"
-      );
+      alert(error.response?.data?.message || "Failed to create enquiry");
     }
   };
 
@@ -165,7 +153,6 @@ function Enquiries() {
   return (
     <div className="enquiries-page">
       <div className="enquiries-container">
-
         <div className="enquiries-header">
           <h1>Enquiries</h1>
 
@@ -173,21 +160,16 @@ function Enquiries() {
             className="primary-button"
             onClick={() => setShowForm(!showForm)}
           >
-            {showForm
-              ? "Close Form"
-              : "+ Create Enquiry"}
+            {showForm ? "Close Form" : "+ Create Enquiry"}
           </button>
         </div>
 
         {showForm && (
           <div className="enquiry-form">
-
             <h2>Create New Enquiry</h2>
 
             <form onSubmit={handleSubmit}>
-
               <div className="form-grid">
-
                 <div className="form-group">
                   <label>Company Name</label>
 
@@ -266,84 +248,62 @@ function Enquiries() {
                     onChange={handleChange}
                   />
                 </div>
-
               </div>
 
               <h3>Products</h3>
 
-              {selectedProducts.map(
-                (item, index) => (
-                  <div
-                    className="form-grid"
-                    key={index}
-                  >
+              {selectedProducts.map((item, index) => (
+                <div className="form-grid" key={index}>
+                  <div className="form-group">
+                    <label>Product</label>
 
-                    <div className="form-group">
-                      <label>Product</label>
+                    <select
+                      value={item.productId}
+                      onChange={(e) =>
+                        handleProductChange(index, "productId", e.target.value)
+                      }
+                      required
+                    >
+                      <option value="">Select Product</option>
 
-                      <select
-                        value={item.productId}
-                        onChange={(e) =>
-                          handleProductChange(
-                            index,
-                            "productId",
-                            e.target.value
-                          )
-                        }
-                        required
-                      >
-                        <option value="">
-                          Select Product
+                      {products.map((product) => (
+                        <option
+                          key={product.product_id}
+                          value={product.product_id}
+                        >
+                          {product.product_code} - {product.product_name}
                         </option>
-
-                        {products.map((product) => (
-                          <option
-                            key={product.product_id}
-                            value={product.product_id}
-                          >
-                            {product.product_code} -{" "}
-                            {product.product_name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="form-group">
-                      <label>Quantity</label>
-
-                      <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) =>
-                          handleProductChange(
-                            index,
-                            "quantity",
-                            e.target.value
-                          )
-                        }
-                        required
-                      />
-                    </div>
-
-                    {selectedProducts.length > 1 && (
-                      <button
-                        type="button"
-                        className="secondary-button"
-                        onClick={() =>
-                          removeProduct(index)
-                        }
-                      >
-                        Remove
-                      </button>
-                    )}
-
+                      ))}
+                    </select>
                   </div>
-                )
-              )}
+
+                  <div className="form-group">
+                    <label>Quantity</label>
+
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleProductChange(index, "quantity", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  {selectedProducts.length > 1 && (
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() => removeProduct(index)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              ))}
 
               <div className="form-actions">
-
                 <button
                   type="button"
                   className="secondary-button"
@@ -352,70 +312,62 @@ function Enquiries() {
                   + Add Product
                 </button>
 
-                <button
-                  type="submit"
-                  className="primary-button"
-                >
+                <button type="submit" className="primary-button">
                   Create Enquiry
                 </button>
-
               </div>
-
             </form>
           </div>
         )}
 
-<div className="enquiries-table-wrapper">
-  {enquiries.length === 0 ? (
-    <p>No enquiries found.</p>
-  ) : (
-    <table className="enquiries-table">
-      <thead>
-        <tr>
-          <th>Enquiry No.</th>
-          <th>Company</th>
-          <th>Contact Person</th>
-          <th>Enquiry Date</th>
-          <th>Required Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
+        <div className="enquiries-table-wrapper">
+          {enquiries.length === 0 ? (
+            <p>No enquiries found.</p>
+          ) : (
+            <table className="enquiries-table">
+              <thead>
+                <tr>
+                  <th>Enquiry No.</th>
+                  <th>Company</th>
+                  <th>Contact Person</th>
+                  <th>Enquiry Date</th>
+                  <th>Required Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
 
-      <tbody>
-        {enquiries.map((enquiry) => (
-          <tr key={enquiry.id}>
-            <td>{enquiry.enquiry_number}</td>
+              <tbody>
+                {enquiries.map((enquiry) => (
+                  <tr key={enquiry.id}>
+                    <td>{enquiry.enquiry_number}</td>
 
-            <td>{enquiry.company_name}</td>
+                    <td>{enquiry.company_name}</td>
 
-            <td>{enquiry.contact_person}</td>
+                    <td>{enquiry.contact_person}</td>
 
-            <td>
-              {new Date(
-                enquiry.enquiry_date
-              ).toLocaleDateString("en-IN")}
-            </td>
+                    <td>
+                      {new Date(enquiry.enquiry_date).toLocaleDateString(
+                        "en-IN"
+                      )}
+                    </td>
 
-            <td>
-              {enquiry.required_date
-                ? new Date(
-                    enquiry.required_date
-                  ).toLocaleDateString("en-IN")
-                : "-"}
-            </td>
+                    <td>
+                      {enquiry.required_date
+                        ? new Date(enquiry.required_date).toLocaleDateString(
+                            "en-IN"
+                          )
+                        : "-"}
+                    </td>
 
-            <td>
-              <span className="status">
-                {enquiry.status}
-              </span>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-</div>
-
+                    <td>
+                      <span className="status">{enquiry.status}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );
