@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
   createEnquiry,
+  getEnquiries,
 } = require("../controllers/enquiryController");
 
 const {
@@ -18,5 +19,13 @@ router.post(
   authorizeRoles("ADMIN", "SALES_USER"),
   createEnquiry
 );
+
+// Get All Enquiries
+router.get(
+    "/",
+    authenticate,
+    authorizeRoles("ADMIN", "SALES_USER"),
+    getEnquiries
+  );
 
 module.exports = router;

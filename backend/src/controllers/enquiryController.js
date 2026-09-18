@@ -121,6 +121,50 @@ const createEnquiry = async (req, res) => {
 };
 
 
+// =========================
+// GET ALL ENQUIRIES
+// =========================
+
+const getEnquiries = async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT
+          e.id,
+          e.enquiry_number,
+          e.enquiry_date,
+          e.required_date,
+          e.notes,
+          e.status,
+  
+          c.id AS customer_id,
+          c.company_name,
+          c.contact_person,
+          c.mobile,
+          c.email,
+          c.city
+  
+        FROM enquiries e
+  
+        INNER JOIN customers c
+          ON e.customer_id = c.id
+  
+        ORDER BY e.created_at DESC
+      `);
+  
+      res.status(200).json({
+        enquiries: result.rows,
+      });
+  
+    } catch (error) {
+      console.error("Get enquiries error:", error);
+  
+      res.status(500).json({
+        message: "Failed to fetch enquiries",
+      });
+    }
+  };
+
 module.exports = {
   createEnquiry,
+  getEnquiries
 };
