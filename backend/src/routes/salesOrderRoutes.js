@@ -4,6 +4,7 @@ const {
   convertQuotationToSalesOrder,
   confirmSalesOrder,
   getSalesOrders,
+  getSalesOrderById,
 } = require("../controllers/salesOrderController");
 
 const {
@@ -34,5 +35,13 @@ router.patch(
     authorizeRoles("ADMIN", "SALES_USER"),
     getSalesOrders
   );
+
+  // Get Sales Order details with products
+router.get(
+  "/:id",
+  authenticate,
+  authorizeRoles("ADMIN", "SALES_USER"),
+  getSalesOrderById
+);
   
 module.exports = router;

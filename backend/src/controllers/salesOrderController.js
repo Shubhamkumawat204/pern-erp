@@ -332,8 +332,84 @@ const getSalesOrders = async (req, res) => {
     }
   };
 
+  // =========================
+// GET SALES ORDER DETAILS
+// =========================
+
+const getSalesOrderById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Get Sales Order + Customer
+    const salesOrderResult = await pool.query(
+      `SELECT
+         so.id,
+         so.order_number,
+         so.quotation_id,
+         so.customer_id,
+         c.company_name,
+         c.contact_person,
+         c.mobile,
+         c.email,
+         c.city,
+         so.order_date,
+         so.total_amount,
+         so.status,
+         so.created_at
+       FROM sales_orders so
+       JOIN customers c
+         ON so.customer_id = c.id
+       WHERE so.id = $1`,
+      [id]
+    );
+
+    if (salesOrderResult.rows.length === 0) {
+      return res.status(404).json({
+        message: "Sales Order not found",
+      });
+    }
+
+    const salesOrder = salesOrderResult.rows[0];
+
+    // Get Sales Order Items + Product details
+    const itemsResult = await pool.query(
+      `SELECT
+         soi.id,
+         soi.product_id,
+         p.product_code,
+         p.product_name,
+         p.category,
+         p.unit,
+         soi.quantity,
+         soi.unit_price
+       FROM sales_order_items soi
+       JOIN products p
+         ON soi.product_id = p.id
+       WHERE soi.sales_order_id = $1
+       ORDER BY soi.id`,
+      [id]
+    );
+
+    res.status(200).json({
+      salesOrder,
+      items: itemsResult.rows,
+    });
+
+  } catch (error) {
+    console.error(
+      "Get sales order details error:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to fetch Sales Order details",
+    });
+  }
+};
+
 module.exports = {
   convertQuotationToSalesOrder,
   confirmSalesOrder,
   getSalesOrders,
+  getSalesOrderById,
 };

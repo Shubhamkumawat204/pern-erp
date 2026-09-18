@@ -1,21 +1,52 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Enquiries from "./pages/Enquiries";
 import Quotations from "./pages/Quotations";
 import SalesOrders from "./pages/SalesOrders";
 
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/enquiries" element={<Enquiries />} />
-        <Route path="/quotations" element={<Quotations />} />
-        <Route path="/sales-orders" element={<SalesOrders />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      {/* Login Page */}
+      <Route path="/" element={<Login />} />
+
+      {/* Enquiries */}
+      <Route
+        path="/enquiries"
+        element={
+          <ProtectedRoute>
+            <Navbar />
+            <Enquiries />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Quotations */}
+      <Route
+        path="/quotations"
+        element={
+          <ProtectedRoute>
+            <Navbar />
+            <Quotations />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Sales Orders */}
+      <Route
+        path="/sales-orders"
+        element={
+          <ProtectedRoute>
+            <Navbar />
+            <SalesOrders />
+          </ProtectedRoute>
+        }
+      />
+    </Routes>
   );
 }
 
