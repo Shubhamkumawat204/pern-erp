@@ -2,13 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Enquiries from "./pages/Enquiries";
+import Quotations from "./pages/Quotations";
 
-
-
-
-function Quotations() {
-  return <h1>Quotations Page</h1>;
-}
 
 function SalesOrders() {
   return <h1>Sales Orders Page</h1>;

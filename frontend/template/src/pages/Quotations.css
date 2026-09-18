@@ -1,0 +1,175 @@
+.quotations-page {
+    min-height: 100vh;
+    background: #f4f6f8;
+    padding: 30px;
+  }
+  
+  .quotations-container {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  
+  .quotations-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+  }
+  
+  .quotations-header h1 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 28px;
+  }
+  
+  .quotations-header p {
+    margin: 7px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .quotation-primary-button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .quotation-primary-button:hover {
+    background: #1d4ed8;
+  }
+  
+  .quotations-table-wrapper {
+    background: #ffffff;
+    border-radius: 10px;
+    overflow-x: auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  }
+  
+  .quotations-table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+  }
+  
+  .quotations-table th,
+  .quotations-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .quotations-table th {
+    background: #f9fafb;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  
+  .quotations-table td {
+    color: #4b5563;
+    font-size: 14px;
+  }
+  
+  .quotations-table tbody tr:hover {
+    background: #f9fafb;
+  }
+  
+  .quotation-number {
+    color: #2563eb !important;
+    font-weight: 600;
+  }
+  
+  .grand-total {
+    color: #111827 !important;
+    font-weight: 700;
+  }
+  
+  .quotation-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  /* Status styles */
+  
+  .status-draft {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  
+  .status-sent {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  
+  .status-accepted {
+    background: #dcfce7;
+    color: #166534;
+  }
+  
+  .status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  .empty-quotations {
+    background: #ffffff;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    color: #6b7280;
+  }
+  
+  .loading-text {
+    color: #374151;
+  }
+  
+  @media (max-width: 700px) {
+    .quotations-page {
+      padding: 15px;
+    }
+  
+    .quotations-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  
+    .quotation-primary-button {
+      width: 100%;
+    }
+  }
+
+  .quotation-product-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    align-items: end;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
+
+  .remove-product-button {
+    padding: 10px 14px;
+    border: 1px solid #dc2626;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #dc2626;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .remove-product-button:hover {
+    background: #fee2e2;
+  }
