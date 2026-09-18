@@ -3,6 +3,7 @@ const express = require("express");
 const {
   createQuotation,
   updateQuotationStatus,
+  getQuotations,    
 } = require("../controllers/quotationController");
 
 const {
@@ -26,6 +27,13 @@ router.patch(
     authenticate,
     authorizeRoles("ADMIN", "SALES_USER"),
     updateQuotationStatus
+  );
+
+router.get(
+    "/",
+    authenticate,
+    authorizeRoles("ADMIN", "SALES_USER"),
+    getQuotations
   );
 
 module.exports = router;

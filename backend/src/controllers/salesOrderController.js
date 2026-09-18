@@ -150,6 +150,190 @@ const convertQuotationToSalesOrder = async (req, res) => {
 };
 
 
+// =========================
+// CONFIRM SALES ORDER & RESERVE INVENTORY
+// =========================
+
+const confirmSalesOrder = async (req, res) => {
+    const client = await pool.connect();
+  
+    try {
+      const { id } = req.params;
+  
+      await client.query("BEGIN");
+  
+      // 1. Get Sales Order
+      const salesOrderResult = await client.query(
+        `SELECT
+           id,
+           order_number,
+           customer_id,
+           total_amount,
+           status
+         FROM sales_orders
+         WHERE id = $1
+         FOR UPDATE`,
+        [id]
+      );
+  
+      if (salesOrderResult.rows.length === 0) {
+        await client.query("ROLLBACK");
+  
+        return res.status(404).json({
+          message: "Sales Order not found",
+        });
+      }
+  
+      const salesOrder = salesOrderResult.rows[0];
+  
+      // 2. Only PENDING Sales Order can be confirmed
+      if (salesOrder.status !== "PENDING") {
+        await client.query("ROLLBACK");
+  
+        return res.status(400).json({
+          message: `Sales Order cannot be confirmed from ${salesOrder.status} status`,
+        });
+      }
+  
+      // 3. Get Sales Order items
+      const itemsResult = await client.query(
+        `SELECT
+           product_id,
+           quantity
+         FROM sales_order_items
+         WHERE sales_order_id = $1`,
+        [id]
+      );
+  
+      if (itemsResult.rows.length === 0) {
+        throw new Error("Sales Order has no items");
+      }
+  
+      // 4. Check and reserve inventory
+      for (const item of itemsResult.rows) {
+  
+        // Lock inventory row
+        const inventoryResult = await client.query(
+          `SELECT
+             id,
+             product_id,
+             physical_quantity,
+             reserved_quantity
+           FROM inventory
+           WHERE product_id = $1
+           FOR UPDATE`,
+          [item.product_id]
+        );
+  
+        if (inventoryResult.rows.length === 0) {
+          throw new Error(
+            `Inventory not found for product ${item.product_id}`
+          );
+        }
+  
+        const inventory = inventoryResult.rows[0];
+  
+        // Available = Physical - Reserved
+        const availableQuantity =
+          inventory.physical_quantity -
+          inventory.reserved_quantity;
+  
+        // 5. Prevent reservation beyond available stock
+        if (item.quantity > availableQuantity) {
+          await client.query("ROLLBACK");
+  
+          return res.status(400).json({
+            message: `Insufficient inventory for product ${item.product_id}`,
+            availableQuantity,
+            requestedQuantity: item.quantity,
+          });
+        }
+  
+        // 6. Increase reserved quantity
+        await client.query(
+          `UPDATE inventory
+           SET reserved_quantity = reserved_quantity + $1
+           WHERE product_id = $2`,
+          [item.quantity, item.product_id]
+        );
+      }
+  
+      // 7. Change Sales Order status
+      const updatedOrderResult = await client.query(
+        `UPDATE sales_orders
+         SET status = 'CONFIRMED'
+         WHERE id = $1
+         RETURNING *`,
+        [id]
+      );
+  
+      await client.query("COMMIT");
+  
+      res.status(200).json({
+        message: "Sales Order confirmed and inventory reserved successfully",
+        salesOrder: updatedOrderResult.rows[0],
+      });
+  
+    } catch (error) {
+      await client.query("ROLLBACK");
+  
+      console.error(
+        "Confirm sales order error:",
+        error
+      );
+  
+      res.status(500).json({
+        message: error.message || "Failed to confirm Sales Order",
+      });
+  
+    } finally {
+      client.release();
+    }
+  };
+
+
+  // =========================
+// GET ALL SALES ORDERS
+// =========================
+
+const getSalesOrders = async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT
+           so.id,
+           so.order_number,
+           so.quotation_id,
+           so.customer_id,
+           c.company_name,
+           c.contact_person,
+           so.order_date,
+           so.total_amount,
+           so.status,
+           so.created_at
+         FROM sales_orders so
+         JOIN customers c
+           ON so.customer_id = c.id
+         ORDER BY so.id DESC`
+      );
+  
+      res.status(200).json({
+        salesOrders: result.rows,
+      });
+  
+    } catch (error) {
+      console.error(
+        "Get sales orders error:",
+        error
+      );
+  
+      res.status(500).json({
+        message: "Failed to fetch sales orders",
+      });
+    }
+  };
+
 module.exports = {
   convertQuotationToSalesOrder,
+  confirmSalesOrder,
+  getSalesOrders,
 };

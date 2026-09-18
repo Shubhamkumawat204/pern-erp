@@ -2,6 +2,8 @@ const express = require("express");
 
 const {
   convertQuotationToSalesOrder,
+  confirmSalesOrder,
+  getSalesOrders,
 } = require("../controllers/salesOrderController");
 
 const {
@@ -19,4 +21,18 @@ router.post(
   convertQuotationToSalesOrder
 );
 
+router.patch(
+    "/:id/confirm",
+    authenticate,
+    authorizeRoles("ADMIN"),
+    confirmSalesOrder
+  );
+
+  router.get(
+    "/",
+    authenticate,
+    authorizeRoles("ADMIN", "SALES_USER"),
+    getSalesOrders
+  );
+  
 module.exports = router;

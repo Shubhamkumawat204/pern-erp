@@ -293,7 +293,54 @@ const updateQuotationStatus = async (req, res) => {
     }
   };
 
+
+  // =========================
+// GET ALL QUOTATIONS
+// =========================
+
+const getQuotations = async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT
+           q.id,
+           q.quotation_number,
+           q.enquiry_id,
+           q.customer_id,
+           c.company_name,
+           c.contact_person,
+           q.valid_until,
+           q.status,
+           q.base_amount,
+           q.discount_amount,
+           q.gst_amount,
+           q.grand_total,
+           q.created_by,
+           q.created_at
+         FROM quotations q
+         JOIN customers c
+           ON q.customer_id = c.id
+         ORDER BY q.id DESC`
+      );
+  
+      res.status(200).json({
+        quotations: result.rows,
+      });
+  
+    } catch (error) {
+      console.error(
+        "Get quotations error:",
+        error
+      );
+  
+      res.status(500).json({
+        message: "Failed to fetch quotations",
+      });
+    }
+  };
+
+
 module.exports = {
   createQuotation,
   updateQuotationStatus,
+  getQuotations
 };
