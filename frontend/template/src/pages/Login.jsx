@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import "./Login.css";
@@ -7,11 +7,22 @@ function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/enquiries", { replace: true });
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
+      setLoading(true);
+
       const response = await api.post("/auth/login", {
         email,
         password,
@@ -22,14 +33,16 @@ function Login() {
       localStorage.setItem("token", token);
 
       alert("Login successful");
+
       navigate("/enquiries");
     } catch (error) {
       console.error("Login error:", error);
 
       alert(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <div className="login-page">
       <div className="login-card">
@@ -65,8 +78,8 @@ function Login() {
             />
           </div>
 
-          <button className="login-button" type="submit">
-            Login
+          <button className="login-button" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
